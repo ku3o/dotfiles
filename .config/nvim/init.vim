@@ -105,6 +105,8 @@ call dein#add('nvie/vim-flake8')
 " Snipped solution
 call dein#add('SirVer/ultisnips.git')
 call dein#add('honza/vim-snippets')
+" Multiple cursor support
+call dein#add('terryma/vim-multiple-cursors')
 " Required:
 call dein#end()
 
