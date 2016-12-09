@@ -3,7 +3,7 @@
 set encoding=utf-8
 
 " Remap <leader> key to someting reachable
-let mapleader = ","
+let mapleader=","
 
 " Enable true colors
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
@@ -15,7 +15,7 @@ syntax on
 set number
 
 " Color scheme
-colorscheme solarized8_dark
+colorscheme solarized8_dark_high
 
 " Highlight searches
 set hlsearch
@@ -39,6 +39,10 @@ set laststatus=2
 set undofile
 set undodir="$HOME/.VIM_UNDO_FILES"
 
+" Static python path
+let g:python3_host_prog = "/Library/Frameworks/Python.framework/Versions/3.5/bin/python3.5"
+let g:python2_host_prog = "/Library/Frameworks/Python.framework/Versions/2.7/bin/python2.7"
+
 " Tab navigation binding. Follow the vim movement bindings
 nnoremap tt  :tabedit<Space>
 nnoremap tm  :tabm<Space>
@@ -49,76 +53,61 @@ nnoremap th :tabprev<CR>
 nnoremap t<LEFT> :tabprev<CR>
 nnoremap tn :tabnew<CR>
 
+" Moving lines up and down with mapping on mac os keystrokes
+" <A-j>
+nnoremap ∆ :m .+1<CR>==
+" <A-k>
+nnoremap ˚ :m .-2<CR>==
+inoremap ∆ <Esc>:m .+1<CR>==gi
+inoremap ˚ <Esc>:m .-2<CR>==gi
+vnoremap ∆ :m '>+1<CR>gv=gv
+vnoremap ˚ :m '<-2<CR>gv=gv
+
 " Show whitespaces
 set listchars=tab:>-,trail:~,extends:>,precedes:<
 set list
 
 "END OF VIM SETTINGS----------------------
+call plug#begin('~/.vim/plugged')
 
-"DEIN SCRIPTS-----------------------------
-if &compatible
-  set nocompatible               " Be iMproved
-endif
-
-" Required:
-set runtimepath^=$HOME/.nvim/dein/repos/github.com/Shougo/dein.vim
-
-" Required:
-call dein#begin(expand('$HOME/.nvim/dein/'))
-
-" Let dein manage dein
-" Required:
-call dein#add('Shougo/dein.vim')
-
-" Add or remove your plugins here:
-" You can specify revision/branch/tag.
-call dein#add('Shougo/neosnippet.vim')
-call dein#add('Shougo/neosnippet-snippets')
+Plug 'Shougo/neosnippet.vim'
+Plug 'Shougo/neosnippet-snippets'
 " Replacement for syntastic.
-"call dein#add('neomake/neomake')
 " Syntax checker
-call dein#add('scrooloose/syntastic')
+Plug 'scrooloose/syntastic'
 " Special development icon in NERDtree and other plugins.
-call dein#add('ryanoasis/vim-devicons')
+Plug 'ryanoasis/vim-devicons'
 " Bottom status bar.
-call dein#add('vim-airline/vim-airline')
+Plug 'vim-airline/vim-airline'
 " NERDTree extension that show status of git watched file.
-call dein#add('Xuyuanp/nerdtree-git-plugin')
+Plug 'Xuyuanp/nerdtree-git-plugin'
 " Filesystem browser sidebar.
-call dein#add('scrooloose/nerdtree')
+Plug 'scrooloose/nerdtree'
 " Nerd tree on every tab
-call dein#add('jistr/vim-nerdtree-tabs')
+Plug 'jistr/vim-nerdtree-tabs'
 " Git diff inside a file.
-call dein#add('airblade/vim-gitgutter')
+Plug 'airblade/vim-gitgutter'
 " Plugin match xml tags
-call dein#add('valloric/MatchTagAlways', {'on_ft': ['html', 'jinja', 'xml']})
+Plug 'valloric/MatchTagAlways', {'on_ft': ['html', 'jinja', 'xml']}
 " Seamless change of qoutes/brackets
-call dein#add('tpope/vim-surround')
+Plug 'tpope/vim-surround'
 " Mostly Python tool for collapsing code sections
-call dein#add('tmhedberg/SimpylFold', {'on_ft': 'python'})
-" Fuzzy search
-call dein#add('junegunn/fzf', {'dir': '~/.fzf'})
+Plug 'tmhedberg/SimpylFold', {'on_ft': 'python'}
 " Autocompletion for python and other languages
-call dein#add('davidhalter/jedi-vim')
+Plug 'davidhalter/jedi-vim'
 " Flake8 for python
-call dein#add('nvie/vim-flake8')
+Plug 'nvie/vim-flake8'
 " Snipped solution
-call dein#add('SirVer/ultisnips.git')
-call dein#add('honza/vim-snippets')
+"Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 " Multiple cursor support
-call dein#add('terryma/vim-multiple-cursors')
-" Required:
-call dein#end()
+Plug 'terryma/vim-multiple-cursors'
+" Activity tracking
+Plug 'wakatime/vim-wakatime'
+" Fuzzy search
+Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 
-" Required:
-filetype plugin indent on
+call plug#end()
 
-" If you want to install not installed plugins on startup.
-if dein#check_install()
-  call dein#install()
-endif
-
-"END DEIN SCRIPTS-------------------------
 
 "PLUGIN SETTINGS-----------------
 
@@ -145,15 +134,29 @@ set statusline+=%*
 
 " Syntastic setting
 let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 0
+let g:syntastic_auto_loc_list = 3
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+let g:syntastic_enable_highlighting = 1
+let g:syntastic_python_checkers = ['flake8']
 
 " NERDTree setup
 "Open NERDTree on console vim startup
 let g:nerdtree_tabs_open_on_console_startup = 1
+let NERDTreeShowBookmarks=1
 
+" Snipped setting
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+nmap <leader><tab> <plug>(fzf-maps-n)
+xmap <leader><tab> <plug>(fzf-maps-x)
+omap <leader><tab> <plug>(fzf-maps-o)
+
+" Surroundings
+nnoremap <leader>s ysiw'<CR>
+
 "END OF PLUGIN SETTINGS-------------------
+"
+"set rtp+=/usr/local/opt/fzf
